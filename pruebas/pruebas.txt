@@ -1,0 +1,9 @@
+k6 run --env MAX_RATE=10000 --summary-export=gradual-stability-10000.json .\gradual-stability-test.js
+
+
+
+k6 run --env RATE=6000 --env DURATION=5m --summary-export=stability-native-6000.json .\stability-test.js
+
+
+
+k6 run --env MAX_RATE=10000 --summary-export=gradual-stability-10000.json .\gradual-stability-test.js
