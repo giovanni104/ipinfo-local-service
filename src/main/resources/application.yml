@@ -1,0 +1,43 @@
+spring:
+  application:
+    name: ipinfo-local-service
+  threads:
+    virtual:
+      enabled: true
+server:
+  port: ${SERVER_PORT:8080}
+  tomcat:
+    threads:
+      max: 400
+      min-spare: 20
+    max-connections: 10000
+    accept-count: 1000
+    max-keep-alive-requests: 10000
+
+ipinfo:
+  token: ${IPINFO_TOKEN:20b6eff000f10e}
+  database-path: ${IPINFO_DATABASE_PATH:./data/ipinfo_lite.mmdb}
+  download-url: ${IPINFO_DOWNLOAD_URL:https://ipinfo.io/data/ipinfo_lite.mmdb}
+  # Cada sábado a las 03:00, hora Colombia.
+  update-cron: ${IPINFO_UPDATE_CRON:0 0 3 * * SAT}
+  update-zone: ${IPINFO_UPDATE_ZONE:America/Bogota}
+  connect-timeout: ${IPINFO_CONNECT_TIMEOUT:10s}
+  request-timeout: ${IPINFO_REQUEST_TIMEOUT:2m}
+  minimum-file-size-bytes: ${IPINFO_MINIMUM_FILE_SIZE_BYTES:1000000}
+  download-on-startup-when-missing: ${IPINFO_DOWNLOAD_ON_STARTUP_WHEN_MISSING:true}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: always
+
+logging:
+  level:
+    com.giovanni.ipinfo: INFO
+  health:
+    probes:
+      enabled: true

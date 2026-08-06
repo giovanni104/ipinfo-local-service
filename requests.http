@@ -1,0 +1,11 @@
+### Consultar IP
+GET http://localhost:8080/api/v1/ips/8.8.8.8
+
+### Estado de la base
+GET http://localhost:8080/api/v1/admin/database/status
+
+### Actualización manual
+POST http://localhost:8080/api/v1/admin/database/update
+
+### Health
+GET http://localhost:8080/actuator/health

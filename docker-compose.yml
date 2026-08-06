@@ -1,0 +1,17 @@
+services:
+  ipinfo-service:
+    build: .
+    container_name: ipinfo-local-service
+    ports:
+      - "8080:8080"
+    environment:
+      IPINFO_TOKEN: ${IPINFO_TOKEN}
+      IPINFO_DATABASE_PATH: /opt/app/data/ipinfo_lite.mmdb
+      IPINFO_UPDATE_CRON: "0 0 3 * * SAT"
+      IPINFO_UPDATE_ZONE: America/Bogota
+    volumes:
+      - ipinfo-data:/opt/app/data
+    restart: unless-stopped
+
+volumes:
+  ipinfo-data:
