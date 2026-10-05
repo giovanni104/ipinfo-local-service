@@ -154,6 +154,11 @@ El proyecto cuenta con perfiles de Maven configurados en el archivo [pom.xml](po
     ```
     *(Nota: Si ejecutas simplemente `mvn clean package`, el perfil `local` se encuentra configurado como activo por defecto).*
 
+*   **Generar JAR para entorno Demo Clientes**:
+    ```bash
+    mvn clean package -P democlientes -DskipTests
+    ```
+
 *   **Generar JAR para entorno Producción**:
     ```bash
     mvn clean package -P produccion -DskipTests
@@ -161,6 +166,13 @@ El proyecto cuenta con perfiles de Maven configurados en el archivo [pom.xml](po
 
 *   **Ejecutar el JAR generado**:
     ```bash
+    # Ejecución estándar:
     java -jar target/ipinfo-local-service-1.0.0.jar
+
+    # Opción 2: Pasar el token como argumento de Spring Boot (--):
+    java -jar target/ipinfo-local-service-1.0.0.jar --ipinfo.token=TU_TOKEN
+
+    # Opción 3: Pasar el token como propiedad JVM (-D, antes de -jar):
+    java -DIPINFO_TOKEN=TU_TOKEN -jar target/ipinfo-local-service-1.0.0.jar
     ```
 

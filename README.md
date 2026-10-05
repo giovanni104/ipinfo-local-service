@@ -59,18 +59,29 @@ El proyecto cuenta con perfiles Maven que inyectan el perfil activo correspondie
 # Compilar para entorno Local (por defecto):
 mvn clean package -P local -DskipTests
 
+# O compilar para entorno Demo Clientes:
+mvn clean package -P democlientes -DskipTests
+
 # O compilar para entorno Producción:
 mvn clean package -P produccion -DskipTests
 ```
 
 ### 2. Ejecutar el JAR generado
 
+Puedes iniciar el servicio pasando los parámetros de configuración (como el token o el perfil) de distintas formas:
+
 ```bash
-# Ejecución estándar (toma el perfil configurado durante el empaquetado):
+# Ejecución estándar (toma variables de entorno o valores por defecto del perfil):
 java -jar target/ipinfo-local-service-1.0.0.jar
 
-# Forzar perfil 'local' explícitamente:
-java -jar target/ipinfo-local-service-1.0.0.jar --spring.profiles.active=local
+# Opción 2: Pasar el token como argumento de Spring Boot (--)
+java -jar target/ipinfo-local-service-1.0.0.jar --ipinfo.token=TU_TOKEN
+
+# Opción 3: Pasar el token como propiedad JVM (-D, siempre ANTES de -jar)
+java -DIPINFO_TOKEN=TU_TOKEN -jar target/ipinfo-local-service-1.0.0.jar
+
+# Forzar perfil explícitamente:
+java -jar target/ipinfo-local-service-1.0.0.jar --spring.profiles.active=democlientes
 
 # Guardar logs en un archivo físico mientras se ejecuta:
 java -jar target/ipinfo-local-service-1.0.0.jar --logging.file.name=logs/ipinfo-service.log

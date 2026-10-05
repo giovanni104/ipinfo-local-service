@@ -12,7 +12,7 @@ ipinfo:
   # configuracion de correos para notificaciones de fallos en la actualizacion de la base de datos
   mail-notification:
      enabled: ${IPINFO_MAIL_ENABLED:true}
-     url: ${IPINFO_MAIL_URL:http://localhost:9092/api/clientapps/tucompraemail/enviarCorreoTuCompra}
+     url: ${IPINFO_MAIL_URL:http://172.30.150.5:9092/api/clientapps/tucompraemail/enviarCorreoTuCompra}
      from: ${IPINFO_MAIL_FROM:monitoreo@tucompra.com.co}
      to: ${IPINFO_MAIL_TO:notificaciones@tucompra.com.co}
-     subject: ${IPINFO_MAIL_SUBJECT:[ALERTA] Fallo al actualizar base de datos IPinfo Lite}	
+     subject: ${IPINFO_MAIL_SUBJECT:[ALERTA-DEMO] Fallo al actualizar base de datos IPinfo Lite}

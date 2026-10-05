@@ -1,9 +1,9 @@
 ipinfo:
-  token: ${IPINFO_TOKEN:20b6eff000f10e}
+  token: ${IPINFO_TOKEN:1234}
   database-path: ${IPINFO_DATABASE_PATH:./data/ipinfo_lite.mmdb}
   download-url: ${IPINFO_DOWNLOAD_URL:https://ipinfo.io/data/ipinfo_lite.mmdb}
-  # Cada sábado a las 03:00, hora Colombia.
-  update-cron: ${IPINFO_UPDATE_CRON:0 0 3 * * SAT}
+  # Todos los días a las 06:00, hora Colombia.
+  update-cron: ${IPINFO_UPDATE_CRON:0 0 6 * * *}
   update-zone: ${IPINFO_UPDATE_ZONE:America/Bogota}
   connect-timeout: ${IPINFO_CONNECT_TIMEOUT:10s}
   request-timeout: ${IPINFO_REQUEST_TIMEOUT:2m}
