@@ -11,7 +11,7 @@
         <relativePath/>
     </parent>
 
-    <groupId>com.giovanni</groupId>
+    <groupId>com.ipinfo</groupId>
     <artifactId>ipinfo-local-service</artifactId>
     <version>1.0.0</version>
     <name>ipinfo-local-service</name>
@@ -56,4 +56,22 @@
             </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>local</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <activatedProperties>local</activatedProperties>
+            </properties>
+        </profile>
+        <profile>
+            <id>produccion</id>
+            <properties>
+                <activatedProperties>produccion</activatedProperties>
+            </properties>
+        </profile>
+    </profiles>
 </project>

@@ -39,24 +39,24 @@ Para trabajar en este proyecto, asegúrate de tener instalado y configurado:
 
 ## 3. Estructura de Paquetes y Clases Principales
 
-El código fuente del servicio se organiza bajo el paquete raíz `com.giovanni.ipinfo`:
+El código fuente del servicio se organiza bajo el paquete raíz `com.ipinfo`:
 
-*   **[IpInfoLocalApplication.java](src/main/java/com/giovanni/ipinfo/IpInfoLocalApplication.java)**: Clase principal que arranca la aplicación Spring Boot. Tiene habilitada la ejecución de tareas programadas (`@EnableScheduling`).
+*   **[IpInfoLocalApplication.java](src/main/java/com/ipinfo/IpInfoLocalApplication.java)**: Clase principal que arranca la aplicación Spring Boot. Tiene habilitada la ejecución de tareas programadas (`@EnableScheduling`).
 *   **`config`**:
-    *   **[IpInfoProperties.java](src/main/java/com/giovanni/ipinfo/config/IpInfoProperties.java)**: Registro de configuración (`@ConfigurationProperties`) validado que mapea las variables de entorno relativas a IPinfo.
-    *   **[DatabaseHealthIndicator.java](src/main/java/com/giovanni/ipinfo/config/DatabaseHealthIndicator.java)**: Integración con Spring Boot Actuator para exponer el estado de salud de la base de datos local en `/actuator/health`.
+    *   **[IpInfoProperties.java](src/main/java/com/ipinfo/config/IpInfoProperties.java)**: Registro de configuración (`@ConfigurationProperties`) validado que mapea las variables de entorno relativas a IPinfo.
+    *   **[DatabaseHealthIndicator.java](src/main/java/com/ipinfo/config/DatabaseHealthIndicator.java)**: Integración con Spring Boot Actuator para exponer el estado de salud de la base de datos local en `/actuator/health`.
 *   **`validation`**:
-    *   **[IpAddressValidator.java](src/main/java/com/giovanni/ipinfo/validation/IpAddressValidator.java)**: Clase utilitaria que verifica sintácticamente las direcciones IPv4/IPv6 y descarta direcciones no públicas (loopbacks, locales, multicast, CGNAT `100.64.0.0/10`).
+    *   **[IpAddressValidator.java](src/main/java/com/ipinfo/validation/IpAddressValidator.java)**: Clase utilitaria que verifica sintácticamente las direcciones IPv4/IPv6 y descarta direcciones no públicas (loopbacks, locales, multicast, CGNAT `100.64.0.0/10`).
 *   **`service`**:
-    *   **[IpInfoLookupService.java](src/main/java/com/giovanni/ipinfo/service/IpInfoLookupService.java)**: Orquesta la validación de la IP y la consulta al administrador de la base de datos.
-    *   **[IpInfoDatabaseManager.java](src/main/java/com/giovanni/ipinfo/service/IpInfoDatabaseManager.java)**: Gestiona el ciclo de vida del lector de base de datos MMDB en memoria. Implementa un esquema de concurrencia segura mediante `ReentrantReadWriteLock` para recargar la base de datos en caliente sin downtime de consultas.
-    *   **[IpInfoDatabaseUpdater.java](src/main/java/com/giovanni/ipinfo/service/IpInfoDatabaseUpdater.java)**: Administra el flujo de descarga, validación del archivo temporal e invocación al reemplazo atómico de la base de datos.
+    *   **[IpInfoLookupService.java](src/main/java/com/ipinfo/service/IpInfoLookupService.java)**: Orquesta la validación de la IP y la consulta al administrador de la base de datos.
+    *   **[IpInfoDatabaseManager.java](src/main/java/com/ipinfo/service/IpInfoDatabaseManager.java)**: Gestiona el ciclo de vida del lector de base de datos MMDB en memoria. Implementa un esquema de concurrencia segura mediante `ReentrantReadWriteLock` para recargar la base de datos en caliente sin downtime de consultas.
+    *   **[IpInfoDatabaseUpdater.java](src/main/java/com/ipinfo/service/IpInfoDatabaseUpdater.java)**: Administra el flujo de descarga, validación del archivo temporal e invocación al reemplazo atómico de la base de datos.
 *   **`controller`**:
-    *   **[IpLookupController.java](src/main/java/com/giovanni/ipinfo/controller/IpLookupController.java)**: Expone las consultas de IP de cara al usuario.
-    *   **[DatabaseAdminController.java](src/main/java/com/giovanni/ipinfo/controller/DatabaseAdminController.java)**: Expone endpoints administrativos para consultar el estado y forzar actualizaciones de la base de datos.
-    *   **[GlobalExceptionHandler.java](src/main/java/com/giovanni/ipinfo/controller/GlobalExceptionHandler.java)**: Captura las excepciones de negocio y de validación para retornar códigos de estado HTTP semánticos (`400 Bad Request`, `404 Not Found`, `503 Service Unavailable`).
+    *   **[IpLookupController.java](src/main/java/com/ipinfo/controller/IpLookupController.java)**: Expone las consultas de IP de cara al usuario.
+    *   **[DatabaseAdminController.java](src/main/java/com/ipinfo/controller/DatabaseAdminController.java)**: Expone endpoints administrativos para consultar el estado y forzar actualizaciones de la base de datos.
+    *   **[GlobalExceptionHandler.java](src/main/java/com/ipinfo/controller/GlobalExceptionHandler.java)**: Captura las excepciones de negocio y de validación para retornar códigos de estado HTTP semánticos (`400 Bad Request`, `404 Not Found`, `503 Service Unavailable`).
 *   **`model` & `dto`**:
-    *   **[IpInfoLiteRecord.java](src/main/java/com/giovanni/ipinfo/model/IpInfoLiteRecord.java)**: Mapeo directo de la estructura interna del archivo MMDB usando anotaciones `@MaxMindDbConstructor` y `@MaxMindDbParameter`.
+    *   **[IpInfoLiteRecord.java](src/main/java/com/ipinfo/model/IpInfoLiteRecord.java)**: Mapeo directo de la estructura interna del archivo MMDB usando anotaciones `@MaxMindDbConstructor` y `@MaxMindDbParameter`.
     *   **`dto/*`**: Objetos de transferencia de datos de respuesta para las APIs.
 
 ---
@@ -88,7 +88,7 @@ Copia el archivo [.env.example](.env.example) a `.env` y define allí la variabl
 
 ## 5. Diseño de Concurrencia y Recarga en Caliente
 
-Un punto crítico para el desarrollo en este proyecto es comprender cómo se maneja la concurrencia al leer y escribir la base de datos en [IpInfoDatabaseManager.java](src/main/java/com/giovanni/ipinfo/service/IpInfoDatabaseManager.java):
+Un punto crítico para el desarrollo en este proyecto es comprender cómo se maneja la concurrencia al leer y escribir la base de datos en [IpInfoDatabaseManager.java](src/main/java/com/ipinfo/service/IpInfoDatabaseManager.java):
 
 1.  **Lecturas Concurrentes**: El endpoint `/api/v1/ips/{ip}` realiza consultas concurrentes adquiriendo un bloqueo de lectura compartido (`lock.readLock().lock()`). Esto permite que múltiples peticiones consulten el MMDB en memoria al mismo tiempo sin bloquearse entre sí.
 2.  **Escritura (Recarga)**: Cuando se actualiza la base de datos de manera manual o programada, el método `reload(Path path)` adquiere un bloqueo de escritura exclusivo (`lock.writeLock().lock()`).
@@ -103,9 +103,9 @@ Un punto crítico para el desarrollo en este proyecto es comprender cómo se man
 
 Si en el futuro se adquiere una base de datos más completa de IPinfo (por ejemplo, con campos de latitud, longitud, ciudad o código postal) y necesitas extender el servicio:
 
-1.  Modifica el modelo **[IpInfoLiteRecord.java](src/main/java/com/giovanni/ipinfo/model/IpInfoLiteRecord.java)** agregando los nuevos campos.
+1.  Modifica el modelo **[IpInfoLiteRecord.java](src/main/java/com/ipinfo/model/IpInfoLiteRecord.java)** agregando los nuevos campos.
 2.  Asegúrate de agregar la anotación `@MaxMindDbParameter(name = "nombre_en_el_mmdb")` a los nuevos parámetros del constructor. El nombre debe coincidir exactamente con la clave interna que utiliza el formato MMDB de IPinfo.
-3.  Extiende el DTO **[IpLookupResponse.java](src/main/java/com/giovanni/ipinfo/dto/IpLookupResponse.java)** y el mapeo en **[IpInfoLookupService.java](src/main/java/com/giovanni/ipinfo/service/IpInfoLookupService.java)**.
+3.  Extiende el DTO **[IpLookupResponse.java](src/main/java/com/ipinfo/dto/IpLookupResponse.java)** y el mapeo en **[IpInfoLookupService.java](src/main/java/com/ipinfo/service/IpInfoLookupService.java)**.
 
 ---
 
@@ -113,7 +113,7 @@ Si en el futuro se adquiere una base de datos más completa de IPinfo (por ejemp
 
 El proyecto incluye pruebas unitarias enfocadas en la validación sintáctica de IPs y rangos restringidos:
 
-*   Ubicación: [IpAddressValidatorTest.java](src/test/java/com/giovanni/ipinfo/service/IpAddressValidatorTest.java).
+*   Ubicación: [IpAddressValidatorTest.java](src/test/java/com/ipinfo/service/IpAddressValidatorTest.java).
 *   Para ejecutar las pruebas:
     ```bash
     mvn test
@@ -141,3 +141,26 @@ Puedes usar el archivo [requests.http](requests.http) si tu IDE soporta clientes
     ```bash
     curl http://localhost:8080/actuator/health
     ```
+
+---
+
+## 9. Generación del JAR con Perfiles Maven
+
+El proyecto cuenta con perfiles de Maven configurados en el archivo [pom.xml](pom.xml) que inyectan el perfil activo correspondiente en [application.yml](src/main/resources/application.yml) durante la fase de empaquetado:
+
+*   **Generar JAR para entorno Local (por defecto)**:
+    ```bash
+    mvn clean package -P local -DskipTests
+    ```
+    *(Nota: Si ejecutas simplemente `mvn clean package`, el perfil `local` se encuentra configurado como activo por defecto).*
+
+*   **Generar JAR para entorno Producción**:
+    ```bash
+    mvn clean package -P produccion -DskipTests
+    ```
+
+*   **Ejecutar el JAR generado**:
+    ```bash
+    java -jar target/ipinfo-local-service-1.0.0.jar
+    ```
+

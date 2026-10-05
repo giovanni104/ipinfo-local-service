@@ -32,15 +32,15 @@ A nivel de código, el proyecto se divide en las siguientes capas y clases:
 
 | Componente | Clase / Ruta | Propósito |
 | :--- | :--- | :--- |
-| **Punto de Entrada** | [IpInfoLocalApplication](src/main/java/com/giovanni/ipinfo/IpInfoLocalApplication.java) | Inicializa la aplicación con soporte para programación de tareas (`@EnableScheduling`) y propiedades externas (`@EnableConfigurationProperties`). |
-| **Controlador Público** | [IpLookupController](src/main/java/com/giovanni/ipinfo/controller/IpLookupController.java) | Expone el endpoint de consulta GET `/api/v1/ips/{ip}`. |
-| **Controlador de Administración** | [DatabaseAdminController](src/main/java/com/giovanni/ipinfo/controller/DatabaseAdminController.java) | Expone endpoints para comprobar el estado `/status` y forzar manualmente la actualización `/update` de la base de datos MMDB. |
-| **Servicio de Negocio** | [IpInfoLookupService](src/main/java/com/giovanni/ipinfo/service/IpInfoLookupService.java) | Orquesta las llamadas de validación y la recuperación del registro de datos. |
-| **Manejador de Base de Datos** | [IpInfoDatabaseManager](src/main/java/com/giovanni/ipinfo/service/IpInfoDatabaseManager.java) | Controla el lector en memoria (`com.maxmind.db.Reader`) usando un bloqueo de lectura/escritura (`ReentrantReadWriteLock`) para permitir recargas en caliente. |
-| **Actualizador de Base de Datos** | [IpInfoDatabaseUpdater](src/main/java/com/giovanni/ipinfo/service/IpInfoDatabaseUpdater.java) | Gestiona la descarga semanal automática, la verificación del archivo descargado y su posterior reemplazo a nivel de sistema de archivos. |
-| **Validador de IP** | [IpAddressValidator](src/main/java/com/giovanni/ipinfo/validation/IpAddressValidator.java) | Analiza sintácticamente la IP. Valida que no sea un dominio y descarta IPs no enrutables públicamente (locales, loopback, multicast, privadas y el bloque CGNAT `100.64.0.0/10`). |
-| **Mapeo de Datos** | [IpInfoLiteRecord](src/main/java/com/giovanni/ipinfo/model/IpInfoLiteRecord.java) | Estructura interna mapeada mediante anotaciones específicas del SDK de MaxMind (`@MaxMindDbConstructor` y `@MaxMindDbParameter`). |
-| **Salud del Sistema** | [DatabaseHealthIndicator](src/main/java/com/giovanni/ipinfo/config/DatabaseHealthIndicator.java) | Expone la salud y detalles de la base de datos a través de Spring Boot Actuator en `/actuator/health`. |
+| **Punto de Entrada** | [IpInfoLocalApplication](src/main/java/com/ipinfo/IpInfoLocalApplication.java) | Inicializa la aplicación con soporte para programación de tareas (`@EnableScheduling`) y propiedades externas (`@EnableConfigurationProperties`). |
+| **Controlador Público** | [IpLookupController](src/main/java/com/ipinfo/controller/IpLookupController.java) | Expone el endpoint de consulta GET `/api/v1/ips/{ip}`. |
+| **Controlador de Administración** | [DatabaseAdminController](src/main/java/com/ipinfo/controller/DatabaseAdminController.java) | Expone endpoints para comprobar el estado `/status` y forzar manualmente la actualización `/update` de la base de datos MMDB. |
+| **Servicio de Negocio** | [IpInfoLookupService](src/main/java/com/ipinfo/service/IpInfoLookupService.java) | Orquesta las llamadas de validación y la recuperación del registro de datos. |
+| **Manejador de Base de Datos** | [IpInfoDatabaseManager](src/main/java/com/ipinfo/service/IpInfoDatabaseManager.java) | Controla el lector en memoria (`com.maxmind.db.Reader`) usando un bloqueo de lectura/escritura (`ReentrantReadWriteLock`) para permitir recargas en caliente. |
+| **Actualizador de Base de Datos** | [IpInfoDatabaseUpdater](src/main/java/com/ipinfo/service/IpInfoDatabaseUpdater.java) | Gestiona la descarga semanal automática, la verificación del archivo descargado y su posterior reemplazo a nivel de sistema de archivos. |
+| **Validador de IP** | [IpAddressValidator](src/main/java/com/ipinfo/validation/IpAddressValidator.java) | Analiza sintácticamente la IP. Valida que no sea un dominio y descarta IPs no enrutables públicamente (locales, loopback, multicast, privadas y el bloque CGNAT `100.64.0.0/10`). |
+| **Mapeo de Datos** | [IpInfoLiteRecord](src/main/java/com/ipinfo/model/IpInfoLiteRecord.java) | Estructura interna mapeada mediante anotaciones específicas del SDK de MaxMind (`@MaxMindDbConstructor` y `@MaxMindDbParameter`). |
+| **Salud del Sistema** | [DatabaseHealthIndicator](src/main/java/com/ipinfo/config/DatabaseHealthIndicator.java) | Expone la salud y detalles de la base de datos a través de Spring Boot Actuator en `/actuator/health`. |
 
 ---
 
